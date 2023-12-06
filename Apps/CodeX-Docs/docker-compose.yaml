@@ -3,14 +3,31 @@ name: alienhive-codex-docs
 
 # Service definitions for the big-bear-codex-docs application
 services:
-  app:
+  CodeX Docs:
     image: ghcr.io/codex-team/codex.docs:v2.1
+    container_name: CodeX Docs
+    deploy:
+      resources:
+        reservations:
+          memory: 0M
+    network_mode: bridge
     ports:
-      - "3000:3000"
+      - target: 3000
+        published: 3000
+        protocol: tcp
+    restart: unless-stopped
     volumes:
-      - /DATA/AppData/$AppID/uploads:/usr/src/app/uploads
-      - /DATA/AppData/$AppID/db:/usr/src/app/db
-      - /DATA/AppData/$AppID/codex-docs-config.local.yaml:/usr/src/app/docs-config.yaml
+      - type: volume
+        source: /DATA/AppData/$AppID/uploads
+        target: /usr/src/app/uploads
+      - type: volume
+        source: /DATA/AppData/$AppID/db
+        target: /usr/src/app/db
+      - type: volume
+        source: /DATA/AppData/$AppID/codex-docs-config.local.yaml
+        target: /usr/src/app/docs-config.yaml
+    environment:
+      APP_CONFIG_auth_password: changeme
     x-casaos: # CasaOS specific configuration
       volumes:
         - container: /usr/src/app/uploads
@@ -32,7 +49,7 @@ x-casaos:
   architectures: # Supported CPU architectures
     - amd64
     - arm64
-  main: app # Main service of the application
+  main: CodeX Docs # Main service of the application
   description:
     en_us: CodeX Docs is a free docs application. It's based on Editor.js ecosystem which gives all modern opportunities for working with content. # Description in English
   tagline:
@@ -44,4 +61,8 @@ x-casaos:
   title:
     en_us: CodeX Docs # Title in English
   category: AlienHiveCasaOS # Application category
+  author: AlienHive-AppStore
+  developer: 007darkmatter5
   port_map: "3000" # Port mapping information
+  scheme: http
+  index: /
