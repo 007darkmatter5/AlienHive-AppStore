@@ -1,0 +1,84 @@
+# Configuration for alienhive-lidarr setup
+name: alienhive-lidarr
+
+# Service definitions for the alienhive-codex-docs application
+services:
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    deploy:
+      resources:
+        reservations:
+          memory: 0M
+    network_mode: bridge
+    ports:
+      - target: 8686
+        published: 8686
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: /DATA/AppData/$AppID/config
+        target: /config
+      - type: volume
+        source: /DATA/Media/Music
+        target: /music
+      - type: volume
+        source: /DATA/Downloads
+        target: /downloads
+    #environment:
+      #APP_CONFIG_auth_password: changeme
+    x-casaos: # CasaOS specific configuration
+      envs:
+        - container: PUID
+          description:
+            en_us: "For TrueNAS, use 0"
+        - container: PGID
+          description:
+            en_us: "For TrueNAS, use 0"
+        - container: TZ
+          description:
+            en_us: "ex. America/Chicago, see https://en.wikipedia.org/wiki/List_of_tz_database_time_zones"
+      ports:
+        - container: "8686"
+          description:
+            en_us: "Container Port: 8686"
+      volumes:
+        - container: /config
+          description:
+            en_us: "Folder within the container named config"
+        - container: /music
+          description:
+            en_us: "Folder within the container named music"
+        - container: /downloads
+          description:
+            en_us: "Folder within the container named downloads"
+      
+
+# CasaOS specific configuration
+x-casaos:
+  architectures: # Supported CPU architectures
+    - amd64
+    - arm64
+  main: CodeX Docs # Main service of the application
+  category: AlienHiveCasaOS
+  author: AlienHive-AppStore
+  developer: 007darkmatter5
+  icon: https://camo.githubusercontent.com/e4be3f6ff9cc8e5df4e3b8c0cceb77534f10fcbc254e5b15d86d3d36d1c468b9/68747470733a2f2f636f6465782e736f2f7075626c69632f6170702f696d672f636f6465782d6c6f676f2e737667 # Icon for the application
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/Cp0204/CasaOS-AppStore-Play@main/Apps/CodeX Docs/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/Cp0204/CasaOS-AppStore-Play@main/Apps/CodeX Docs/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/Cp0204/CasaOS-AppStore-Play@main/Apps/CodeX Docs/screenshot-3.png
+  thumbnail: "" # Thumbnail image (currently empty)
+  description:
+    en_us: "CodeX Docs is a free docs application. It's based on Editor.js ecosystem which gives all modern opportunities for working with content." # Description in English
+  tagline:
+    en_us: "CodeX Docs" # Short description or tagline in English
+  title:
+    en_us: "CodeX Docs"
+  tips:
+    before_install: null
+    custom: null
+  port_map: '3000'
+  scheme: http
+  index: /

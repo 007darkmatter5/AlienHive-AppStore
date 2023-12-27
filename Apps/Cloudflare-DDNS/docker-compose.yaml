@@ -1,0 +1,11 @@
+version: '2'
+services:
+  cloudflare-ddns:
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+    environment:
+      - API_KEY=LWIwBM26pKw-cfAPpSIIOxwwpbZwfzLOXkS7MDIb
+      - ZONE=alienhive.org
+      - PROXIED=true
+      - PUID=0
+      - PGID=0
